@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Techfest 2026 // Interactive Parallax Odyssey | Activity-3</title>
+  <meta name="description" content="Interactive Parallax Scrolling Odyssey for Techfest IIT Bombay CA Web Development Task. Multi-layered vertical cyber journey from Quantum Sub-Strata to Deep Cosmos.">
+  
+  <!-- Favicon / Icon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2300f3ff'><polygon points='12 2 2 7 12 12 22 7 12 2'/><polyline points='2 17 12 22 22 17'/><polyline points='2 12 12 17 22 12'/></svg>">
+  
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Fullscreen Background & FX Canvases -->
+  <canvas id="bg-canvas"></canvas>
+  <canvas id="fx-canvas"></canvas>
+  <div class="crt-overlay"></div>
+  <div class="cyber-vignette"></div>
+  <div class="custom-cursor"></div>
+
+  <!-- ==========================================================================
+       TACTICAL HUD (HEADER & LIVE TELEMETRY)
+       ========================================================================== -->
+  <header class="tactical-hud">
+    <div class="hud-left">
+      <a href="#chapter-1" class="brand-badge">
+        <div class="brand-logo-icon">
+          <svg viewBox="0 0 24 24">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+            <polyline points="2 17 12 22 22 17"/>
+            <polyline points="2 12 12 17 22 12"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1>TECHFEST 2026</h1>
+          <span>IIT BOMBAY // ODYSSEY</span>
+        </div>
+      </a>
+
+      <!-- Dedicated Chapter Navigation Links -->
+      <nav class="hud-nav-links">
+        <a href="#chapter-1" class="hud-nav-btn">01. SUB-STRATA</a>
+        <a href="#chapter-2" class="hud-nav-btn">02. METROPOLIS</a>
+        <a href="#chapter-3" class="hud-nav-btn">03. MECHA NEXUS</a>
+        <a href="#chapter-4" class="hud-nav-btn">04. STRATOSPHERE</a>
+        <a href="#chapter-5" class="hud-nav-btn">05. SINGULARITY</a>
+      </nav>
+    </div>
+
+    <!-- Live Telemetry Display -->
+    <div class="hud-telemetry">
+      <div class="telemetry-item">
+        <span class="telemetry-label">ALTITUDE</span>
+        <span class="telemetry-val" id="hud-altitude">-10,000 M</span>
+      </div>
+      <div class="telemetry-divider"></div>
+      <div class="telemetry-item">
+        <span class="telemetry-label">VELOCITY</span>
+        <span class="telemetry-val" id="hud-velocity">0 KPH</span>
+      </div>
+      <div class="telemetry-divider"></div>
+      <div class="telemetry-item">
+        <span class="telemetry-label">CORE FLUX</span>
+        <span class="telemetry-val" style="color: var(--accent);">99.4%</span>
+      </div>
+    </div>
+
+    <!-- Right Controls: Auto-Cruise, Audio & Theme Switcher -->
+    <div class="hud-right">
+      <button class="hud-ctrl-btn" id="btn-cruise" title="Toggle Hands-Free Cinematic Cruise [C]">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+          <polygon points="5 3 19 12 5 21 5 3"/>
+        </svg>
+        <span class="btn-label">AUTO-CRUISE</span>
+      </button>
+
+      <button class="hud-ctrl-btn" id="btn-audio" title="Toggle Web Audio Synthesizer [M]">
+        <div class="eq-bars">
+          <div class="eq-bar"></div>
+          <div class="eq-bar"></div>
+          <div class="eq-bar"></div>
+          <div class="eq-bar"></div>
+        </div>
+        <span class="btn-label">AUDIO: OFF</span>
+      </button>
+
+      <!-- 4 Cyber Theme Pills -->
+      <div class="theme-matrix-pills" title="Switch Theme Core Matrix [T]">
+        <div class="theme-pill cyan active" data-theme="cyan" title="Neo-Cyan"></div>
+        <div class="theme-pill crimson" data-theme="crimson" title="Crimson Berserk"></div>
+        <div class="theme-pill matrix" data-theme="matrix" title="Matrix Emerald"></div>
+        <div class="theme-pill gold" data-theme="gold" title="Solar Gold"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==========================================================================
+       VERTICAL CHAPTER NAVIGATOR / MINIMAP (FIXED RIGHT)
+       ========================================================================== -->
+  <nav class="chapter-navigator">
+    <div class="nav-track">
+      <div class="nav-progress-fill"></div>
+    </div>
+    
+    <a href="#chapter-1" class="chapter-node active" data-chapter="1">
+      <span class="chapter-tooltip">01. SUB-STRATA (-10,000M)</span>
+      <div class="chapter-dot"><div class="chapter-dot-inner"></div></div>
+    </a>
+
+    <a href="#chapter-2" class="chapter-node" data-chapter="2">
+      <span class="chapter-tooltip">02. NEO-MUMBAI (0M)</span>
+      <div class="chapter-dot"><div class="chapter-dot-inner"></div></div>
+    </a>
+
+    <a href="#chapter-3" class="chapter-node" data-chapter="3">
+      <span class="chapter-tooltip">03. MECHA NEXUS (+5,000M)</span>
+      <div class="chapter-dot"><div class="chapter-dot-inner"></div></div>
+    </a>
+
+    <a href="#chapter-4" class="chapter-node" data-chapter="4">
+      <span class="chapter-tooltip">04. STRATOSPHERE (+50,000M)</span>
+      <div class="chapter-dot"><div class="chapter-dot-inner"></div></div>
+    </a>
+
+    <a href="#chapter-5" class="chapter-node" data-chapter="5">
+      <span class="chapter-tooltip">05. SINGULARITY (DEEP COSMOS)</span>
+      <div class="chapter-dot"><div class="chapter-dot-inner"></div></div>
+    </a>
+  </nav>
+
+  <!-- ==========================================================================
+       PARALLAX CONTAINER & MAIN NARRATIVE CHAPTERS
+       ========================================================================== -->
+  <main class="parallax-container">
+
+    <!-- -----------------------------------------------------------------------
+         CHAPTER 01 // THE QUANTUM SUB-STRATA (-10,000M DEPTH)
+         ----------------------------------------------------------------------- -->
+    <section class="parallax-section" id="chapter-1">
+      <!-- Background Parallax Layers -->
+      <div class="parallax-layer substrata-core-orb" data-speed="0.25" data-direction="zoom"></div>
+      <div class="parallax-layer substrata-pillars" data-speed="0.15"></div>
+      <div class="parallax-layer substrata-grid-floor" data-speed="0.35"></div>
+
+      <!-- Floating Holographic Data Conduits -->
+      <div class="parallax-layer" data-speed="0.6" style="top: 15%; left: 8%; opacity: 0.7;">
+        <svg width="180" height="180" viewBox="0 0 100 100" fill="none" stroke="var(--primary)" stroke-width="1.5">
+          <circle cx="50" cy="50" r="45" stroke-dasharray="8 4"/>
+          <polygon points="50,15 80,75 20,75"/>
+          <circle cx="50" cy="50" r="10" fill="var(--primary)"/>
+        </svg>
+      </div>
+
+      <div class="parallax-layer" data-speed="0.8" style="top: 35%; right: 10%; opacity: 0.6;">
+        <svg width="220" height="220" viewBox="0 0 100 100" fill="none" stroke="var(--accent)" stroke-width="1.5">
+          <rect x="15" y="15" width="70" height="70" stroke-dasharray="12 6"/>
+          <line x1="15" y1="15" x2="85" y2="85"/>
+          <line x1="85" y1="15" x2="15" y2="85"/>
+        </svg>
+      </div>
+
+      <!-- Hero Content -->
+      <div class="section-content">
+        <div class="section-tag">
+          <span>CHAPTER 01 // SUB-SURFACE INCEPTION</span>
+        </div>
+        <h2 class="section-title">CYBER-ODYSSEY<br>SYNTHETIC FRONTIER</h2>
+        <p class="section-subtitle">
+          Embark on an interactive multi-depth parallax ascent through the technological singularity of Techfest 2026, IIT Bombay. Scroll to elevate through subterranean quantum reactors to the outer celestial cosmos.
+        </p>
+
+        <div class="cyber-btn-group">
+          <a href="#chapter-2" class="cyber-btn pulse-glow">
+            <span>INITIATE ASCENT</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <polyline points="19 12 12 19 5 12"/>
+            </svg>
+          </a>
+          <button class="cyber-btn outline" onclick="window.parallax.toggleAutoCruise(true)">
+            <span>LAUNCH AUTO-CRUISE</span>
+          </button>
+        </div>
+
+        <!-- Live Telemetry Strip -->
+        <div class="hero-stats-strip">
+          <div class="hero-stat-card">
+            <div class="hero-stat-val">₹50L+</div>
+            <div class="hero-stat-desc">Championship Prize Pool</div>
+          </div>
+          <div class="hero-stat-card">
+            <div class="hero-stat-val">175,000+</div>
+            <div class="hero-stat-desc">Annual Footfall</div>
+          </div>
+          <div class="hero-stat-card">
+            <div class="hero-stat-val">2,500+</div>
+            <div class="hero-stat-desc">Universities Represented</div>
+          </div>
+          <div class="hero-stat-card">
+            <div class="hero-stat-val">60+</div>
+            <div class="hero-stat-desc">Flagship Arenas & Expos</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scroll Hint -->
+      <div class="scroll-indicator" onclick="window.parallax.scrollToChapter(1)">
+        <span>SCROLL TO ASCEND</span>
+        <div class="mouse-icon"><div class="mouse-wheel"></div></div>
+      </div>
+    </section>
+
+    <!-- -----------------------------------------------------------------------
+         CHAPTER 02 // NEO-MUMBAI 2026 CYBER METROPOLIS (0M GROUND ZERO)
+         ----------------------------------------------------------------------- -->
+    <section class="parallax-section" id="chapter-2">
+      <!-- Layered Skyline Silhouettes with Parallax Speed Differentials -->
+      <div class="city-backdrop">
+        <!-- Far Skyline -->
+        <div class="skyline-layer skyline-far" data-speed="0.2">
+          <svg viewBox="0 0 1440 400" fill="none" preserveAspectRatio="none" style="width: 100%; height: 100%;">
+            <path d="M0,400 L0,220 L60,220 L60,180 L110,180 L110,240 L190,240 L190,140 L260,140 L260,260 L340,260 L340,110 L410,110 L410,230 L520,230 L520,90 L600,90 L600,250 L720,250 L720,130 L790,130 L790,270 L910,270 L910,150 L990,150 L990,260 L1100,260 L1100,80 L1190,80 L1190,240 L1310,240 L1310,160 L1440,160 L1440,400 Z" fill="#06122d"/>
+          </svg>
+        </div>
+
+        <!-- Mid Skyline with Illuminated IIT Bombay Cyber Tower -->
+        <div class="skyline-layer skyline-mid" data-speed="0.45">
+          <svg viewBox="0 0 1440 450" fill="none" preserveAspectRatio="none" style="width: 100%; height: 100%;">
+            <path d="M0,450 L0,280 L90,280 L90,200 L160,200 L160,310 L280,310 L280,160 L360,160 L360,320 L480,320 L480,120 L510,50 L540,120 L580,300 L680,300 L680,190 L780,190 L780,330 L900,330 L900,170 L980,170 L980,310 L1080,310 L1080,140 L1180,140 L1180,290 L1300,290 L1300,210 L1440,210 L1440,450 Z" fill="#0a1d48"/>
+          </svg>
+        </div>
+
+        <!-- Near Foreground Skyline with Neon Billboards -->
+        <div class="skyline-layer skyline-near" data-speed="0.75">
+          <svg viewBox="0 0 1440 350" fill="none" preserveAspectRatio="none" style="width: 100%; height: 100%;">
+            <path d="M0,350 L0,230 L130,230 L130,150 L220,150 L220,260 L390,260 L390,120 L490,120 L490,280 L620,280 L620,170 L740,170 L740,270 L890,270 L890,130 L1010,130 L1010,290 L1160,290 L1160,180 L1280,180 L1280,280 L1440,280 L1440,350 Z" fill="#040b1e"/>
+          </svg>
+        </div>
+
+        <!-- Transit Skyway & Aerocars -->
+        <div class="transit-skyway" style="top: 42%;">
+          <div class="aerocar" style="top: -5px;"></div>
+        </div>
+        <div class="transit-skyway" style="top: 68%; transform: rotate(2deg);">
+          <div class="aerocar reverse" style="top: -5px;"></div>
+        </div>
+      </div>
+
+      <!-- Section Content -->
+      <div class="section-content">
+        <div class="section-tag">
+          <span>CHAPTER 02 // GROUND ZERO: MUMBAI 2026</span>
+        </div>
+        <h2 class="section-title">NEO-METROPOLIS<br>CYBER GRID</h2>
+        <p class="section-subtitle">
+          At the heart of the IIT Bombay campus rises the high-density innovation sprawl. Hover over the building schematic below to activate the **Interactive X-Ray Circuit Scanner Lens** and inspect the sub-atomic quantum circuitry.
+        </p>
+
+        <!-- Interactive X-Ray Circuit Scanner Lens Widget -->
+        <div class="xray-scanner-container">
+          <!-- Normal Exterior City Layer -->
+          <div class="xray-normal-layer">
+            <div class="metropolis-card">
+              <h3>IIT BOMBAY INNOVATION COMPLEX</h3>
+              <p>Autonomous AI server arrays, high-voltage mecha fabrication bays, and advanced robotics test tracks integrated directly into the city's smart grid.</p>
+              <div style="margin-top: 1rem; font-family: var(--font-mono); font-size: 0.75rem; color: var(--primary);">
+                ▸ LATITUDE: 19.1334° N | LONGITUDE: 72.9133° E<br>
+                ▸ GRID STATUS: 100% OPERATIONAL
+              </div>
+            </div>
+            <div style="display: flex; gap: 1rem;">
+              <div style="width: 130px; height: 160px; border: 1px solid var(--primary); border-radius: 6px; background: rgba(0,243,255,0.05); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0.5rem;">
+                <span style="font-family: var(--font-display); font-size: 1.8rem; color: var(--primary); font-weight: 800;">500+</span>
+                <span style="font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-muted);">ROBOTS DEPLOYED</span>
+              </div>
+              <div style="width: 130px; height: 160px; border: 1px solid var(--accent); border-radius: 6px; background: rgba(255,0,127,0.05); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0.5rem;">
+                <span style="font-family: var(--font-display); font-size: 1.8rem; color: var(--accent); font-weight: 800;">10 PB</span>
+                <span style="font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-muted);">SYNTHETIC NEURAL DATA</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Internal Circuit X-Ray Layer (Revealed via Clip-Path Lens) -->
+          <div class="xray-circuit-layer">
+            <div class="metropolis-card">
+              <h3 style="color: var(--primary);">INTERNAL CIRCUIT TELEMETRY</h3>
+              <p style="color: #fff;">[X-RAY SCHEMATIC ACTIVATED] Superconducting quantum conduits routing 40 Terawatts to the central Techfest 2026 Singularity Core.</p>
+            </div>
+            <div class="circuit-schematic-hud">
+              <div>[01] OPTICAL BUS: 128.4 TB/S (ACTIVE)</div>
+              <div>[02] CRYOGENIC COOLING: 4.2 KELVIN</div>
+              <div>[03] NEURAL CHIP DENSITY: 1.2M CORES</div>
+              <div>[04] DEFENSE PROTOCOL: LEVEL-5 ENCRYPTION</div>
+            </div>
+          </div>
+
+          <!-- Rotating Dashed Target Lens Reticle -->
+          <div class="xray-lens-reticle">
+            <div class="xray-lens-label">X-RAY LENS ACTIVE</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- -----------------------------------------------------------------------
+         CHAPTER 03 // THE MECHA NEXUS (PINNED EXPLODED SCRUBBING VIEW)
+         ----------------------------------------------------------------------- -->
+    <div class="pinned-scroll-wrapper" id="chapter-3">
+      <div class="pinned-viewport">
+        <!-- Pinned Header & Scrub Progress -->
+        <div class="mecha-scrub-header">
+          <div class="section-tag">
+            <span>CHAPTER 03 // SCROLL-DRIVEN SCRUBBING</span>
+          </div>
+          <h2 class="section-title" style="font-size: 2.2rem; margin-bottom: 0.25rem;">
+            MECHA NEXUS ASSEMBLY
+          </h2>
+          <div class="mecha-scrub-progress">
+            <span>DISASSEMBLY STATE:</span>
+            <div class="scrub-track"><div class="scrub-fill"></div></div>
+            <span class="scrub-pct">0%</span>
+          </div>
+        </div>
+
+        <!-- Exploded 3D Mecha Assembly Stage -->
+        <div class="mecha-stage">
+          <div class="mecha-core-structure">
+
+            <!-- Part 1: Cranium Helmet & Neural Visor -->
+            <div class="mecha-part part-cranium">
+              <svg viewBox="0 0 180 90" fill="none" style="width: 100%; height: 100%;">
+                <polygon points="30,80 150,80 170,40 140,10 40,10 10,40" fill="#0c1e45" stroke="var(--primary)" stroke-width="2"/>
+                <line x1="45" y1="45" x2="135" y2="45" stroke="var(--accent)" stroke-width="4" stroke-linecap="round"/>
+                <circle cx="90" cy="25" r="6" fill="var(--primary)"/>
+              </svg>
+            </div>
+
+            <!-- Part 2: Left Titan Shoulder Armor -->
+            <div class="mecha-part part-armor-left">
+              <svg viewBox="0 0 130 160" fill="none" style="width: 100%; height: 100%;">
+                <polygon points="10,20 110,10 120,130 30,150" fill="#081533" stroke="var(--primary)" stroke-width="2"/>
+                <line x1="25" y1="40" x2="95" y2="120" stroke="rgba(var(--primary-rgb),0.5)" stroke-width="1.5"/>
+                <rect x="35" y="60" width="40" height="20" fill="rgba(var(--accent-rgb),0.2)" stroke="var(--accent)" stroke-width="1"/>
+              </svg>
+            </div>
+
+            <!-- Part 3: Right Titan Shoulder Armor -->
+            <div class="mecha-part part-armor-right">
+              <svg viewBox="0 0 130 160" fill="none" style="width: 100%; height: 100%;">
+                <polygon points="20,10 120,20 100,150 10,130" fill="#081533" stroke="var(--primary)" stroke-width="2"/>
+                <line x1="105" y1="40" x2="35" y2="120" stroke="rgba(var(--primary-rgb),0.5)" stroke-width="1.5"/>
+                <rect x="55" y="60" width="40" height="20" fill="rgba(var(--accent-rgb),0.2)" stroke="var(--accent)" stroke-width="1"/>
+              </svg>
+            </div>
+
+            <!-- Part 4: Central Tachyon Arc Reactor -->
+            <div class="mecha-part part-reactor">
+              <div class="reactor-ring-outer"></div>
+              <div class="reactor-ring-inner"></div>
+              <div class="reactor-core-glow"></div>
+            </div>
+
+            <!-- Part 5: Hydraulic Spine & Rib Chassis -->
+            <div class="mecha-part part-chassis">
+              <svg viewBox="0 0 190 140" fill="none" style="width: 100%; height: 100%;">
+                <rect x="75" y="10" width="40" height="120" rx="6" fill="#050e24" stroke="var(--primary)" stroke-width="2"/>
+                <!-- Rib Conduits -->
+                <line x1="20" y1="35" x2="75" y2="35" stroke="var(--primary)" stroke-width="2.5"/>
+                <line x1="115" y1="35" x2="170" y2="35" stroke="var(--primary)" stroke-width="2.5"/>
+                <line x1="30" y1="70" x2="75" y2="70" stroke="var(--accent)" stroke-width="2.5"/>
+                <line x1="115" y1="70" x2="160" y2="70" stroke="var(--accent)" stroke-width="2.5"/>
+                <line x1="40" y1="105" x2="75" y2="105" stroke="var(--primary)" stroke-width="2.5"/>
+                <line x1="115" y1="105" x2="150" y2="105" stroke="var(--primary)" stroke-width="2.5"/>
+              </svg>
+            </div>
+
+            <!-- Exploded Callout HUD Tags -->
+            <div class="exploded-callouts">
+              <div class="callout-tag callout-1">
+                <span>01. NEURAL CRANIUM</span>
+                Tachyon Optical Visor & Synaptic AI
+              </div>
+              <div class="callout-tag callout-2">
+                <span>02. TITAN CHASSIS</span>
+                Sub-Dermal Armor & Reactive Plating
+              </div>
+              <div class="callout-tag callout-3">
+                <span>03. TACHYON CORE</span>
+                Dual Magnetic Confinement Reactor
+              </div>
+              <div class="callout-tag callout-4">
+                <span>04. BIONIC ACTUATORS</span>
+                High-Torque Hydraulic Spine Conduits
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- -----------------------------------------------------------------------
+         CHAPTER 04 // STRATOSPHERIC GATEWAY (+50,000M ALTITUDE)
+         ----------------------------------------------------------------------- -->
+    <section class="parallax-section" id="chapter-4">
+      <!-- Space Elevator Cables & Shockwaves -->
+      <div class="elevator-tether" data-speed="0.2">
+        <div class="elevator-pod"></div>
+      </div>
+      <div class="elevator-tether second" data-speed="0.35">
+        <div class="elevator-pod" style="animation-duration: 7s;"></div>
+      </div>
+      <div class="supersonic-rings"></div>
+
+      <div class="parallax-layer" data-speed="0.9" style="top: 20%; right: 12%; opacity: 0.7;">
+        <svg width="260" height="140" viewBox="0 0 200 100" fill="none" stroke="var(--primary)" stroke-width="1.5">
+          <polygon points="10,50 60,20 180,40 190,50 180,60 60,80" fill="rgba(0,243,255,0.06)"/>
+          <line x1="60" y1="20" x2="60" y2="80"/>
+          <circle cx="120" cy="50" r="15" stroke="var(--accent)"/>
+        </svg>
+      </div>
+
+      <div class="section-content">
+        <div class="section-tag">
+          <span>CHAPTER 04 // MESOSPHERE TO ORBIT</span>
+        </div>
+        <h2 class="section-title">STRATOSPHERIC<br>GATEWAY</h2>
+        <p class="section-subtitle">
+          Breaking free from the terrestrial envelope at Mach 12. Enter the stratospheric launch corridor powered by carbon-nanotube space elevators and autonomous orbital defense shuttles.
+        </p>
+
+        <!-- Gateway Feature Grid -->
+        <div class="space-portal-cards">
+          <div class="gateway-feature-card">
+            <div class="gateway-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="2" y1="12" x2="22" y2="12"/>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+              </svg>
+            </div>
+            <h4>Orbital Swarm Defense</h4>
+            <p>Real-time distributed satellite mesh protecting sub-orbital scientific transmissions and telemetry relays.</p>
+          </div>
+
+          <div class="gateway-feature-card">
+            <div class="gateway-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+              </svg>
+            </div>
+            <h4>Ion Propulsion Corridors</h4>
+            <p>High-efficiency plasma thrusters providing seamless interplanetary transit vectors across deep space.</p>
+          </div>
+
+          <div class="gateway-feature-card">
+            <div class="gateway-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+              </svg>
+            </div>
+            <h4>Solar Flux Harvesting</h4>
+            <p>Photovoltaic arrays capturing unfiltered solar radiation to recharge planetary quantum containment cells.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- -----------------------------------------------------------------------
+         CHAPTER 05 // THE SINGULARITY HORIZON (DEEP COSMOS & EVENT MONOLITHS)
+         ----------------------------------------------------------------------- -->
+    <section class="parallax-section" id="chapter-5">
+      <!-- Cosmic Singularity Swirling Portal -->
+      <div class="cosmic-singularity-portal" data-speed="0.15" data-direction="zoom"></div>
+
+      <div class="section-content">
+        <div class="section-tag">
+          <span>CHAPTER 05 // TERMINAL TRANSCENDENCE</span>
+        </div>
+        <h2 class="section-title">THE SINGULARITY<br>HORIZON</h2>
+        <p class="section-subtitle">
+          You have reached deep cosmos (+384,000 KM). The ultimate convergence of intelligence, engineering, and competition. Explore the flagship championships or mint your official **Parallax Flight Certificate**.
+        </p>
+
+        <!-- 3D Tilt Flagship Arena Monolith Cards -->
+        <div class="monolith-grid">
+          <!-- Monolith 1: Robowars -->
+          <div class="monolith-card">
+            <span class="monolith-badge">ARENA 01 // COMBAT ROBOTICS</span>
+            <h4>INTERNATIONAL ROBOWARS</h4>
+            <p>Heavyweight combat machines clash in an impenetrable reinforced arena with spinning blades, pneumatic flippers, and fire hazards.</p>
+            <div class="monolith-prize">
+              <span>PRIZE POOL:</span> ₹15,00,000
+            </div>
+          </div>
+
+          <!-- Monolith 2: AI Matrix -->
+          <div class="monolith-card">
+            <span class="monolith-badge">ARENA 02 // NEURAL AI</span>
+            <h4>CYBER MATRIX DEFENSE</h4>
+            <p>High-stakes capture-the-flag hackathon solving zero-day vulnerabilities, quantum cryptanalysis, and adversarial AI attacks.</p>
+            <div class="monolith-prize">
+              <span>PRIZE POOL:</span> ₹10,00,000
+            </div>
+          </div>
+
+          <!-- Monolith 3: Drone Swarm -->
+          <div class="monolith-card">
+            <span class="monolith-badge">ARENA 03 // AERODYNAMICS</span>
+            <h4>DRONE SWARM ODYSSEY</h4>
+            <p>FPV high-speed racing and autonomous swarm synchronization navigating complex 3D laser-lit obstacle courses.</p>
+            <div class="monolith-prize">
+              <span>PRIZE POOL:</span> ₹8,00,000
+            </div>
+          </div>
+
+          <!-- Monolith 4: Quantum Computing -->
+          <div class="monolith-card">
+            <span class="monolith-badge">ARENA 04 // QUANTUM TECH</span>
+            <h4>QUANTUM FINTECH SUMMIT</h4>
+            <p>Engineering decentralized algorithms, high-frequency quantum simulations, and cryptographic smart contract systems.</p>
+            <div class="monolith-prize">
+              <span>PRIZE POOL:</span> ₹12,00,000
+            </div>
+          </div>
+        </div>
+
+        <!-- ====================================================================
+             MISSION FLIGHT CERTIFICATE GENERATOR HUB
+             ==================================================================== -->
+        <div class="certificate-hub">
+          <!-- Form Inputs -->
+          <div class="cert-form">
+            <div class="section-tag" style="margin-bottom: 0;">
+              <span>AUTHENTICATION PROTOCOL</span>
+            </div>
+            <h3 style="font-family: var(--font-display); font-size: 1.5rem; color: #fff;">
+              MINT FLIGHT PASS
+            </h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">
+              Personalize and export your cryptographic high-resolution PNG mission certificate documenting your ascent across all 5 parallax strata.
+            </p>
+
+            <div class="cert-form-group">
+              <label for="cert-input-name">VOYAGER AGENT CALLSIGN</label>
+              <input type="text" id="cert-input-name" class="cert-input" value="PRADEEPTHI YARLAGADDA" placeholder="Enter your name...">
+            </div>
+
+            <div class="cert-form-group">
+              <label for="cert-input-division">EXPEDITION DIVISION</label>
+              <select id="cert-input-division" class="cert-input">
+                <option value="Deep Cosmos Expedition">Deep Cosmos Expedition</option>
+                <option value="Biomechanical Cybernetics">Biomechanical Cybernetics</option>
+                <option value="Autonomous AI Systems">Autonomous AI Systems</option>
+                <option value="Quantum Astrophysics">Quantum Astrophysics</option>
+              </select>
+            </div>
+
+            <div class="cert-form-group">
+              <label for="cert-input-vessel">FLAGSHIP VESSEL</label>
+              <input type="text" id="cert-input-vessel" class="cert-input" value="NEXUS-01 ODYSSEY">
+            </div>
+
+            <button class="cyber-btn pulse-glow" id="btn-download-cert" style="margin-top: 0.5rem;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+              <span>DOWNLOAD CERTIFICATE (.PNG)</span>
+            </button>
+          </div>
+
+          <!-- Live Dynamic Preview -->
+          <div class="cert-preview-card">
+            <div class="cert-preview-header">
+              <div>
+                <div class="cert-preview-title">TECHFEST 2026 // IIT BOMBAY</div>
+                <div style="font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-muted);">SYNTHETIC ASCENT VOYAGER</div>
+              </div>
+              <div class="cert-preview-id" id="cert-preview-id">0xTF26-ALPHA</div>
+            </div>
+
+            <div class="cert-agent-name" id="cert-preview-name">PRADEEPTHI YARLAGADDA</div>
+            <div class="cert-desc">
+              Has officially completed the multi-layered vertical cyber ascent from the -10,000M Sub-Strata to Deep Cosmos (+384,000 KM) at the Techfest 2026 Innovation Challenge.
+            </div>
+
+            <div class="cert-footer">
+              <div>
+                <span style="color: var(--primary);">DIVISION:</span> <span id="cert-preview-division">DEEP COSMOS EXPEDITION</span><br>
+                <span style="color: var(--primary);">STATUS:</span> AUTHENTICATED BY CA PORTAL
+              </div>
+              <div style="text-align: right;">
+                <span style="color: var(--accent); font-weight: 700;">TECHFEST 2026</span><br>
+                IIT BOMBAY
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==========================================================================
+       TACTICAL FOOTER
+       ========================================================================== -->
+  <footer class="parallax-footer">
+    <div class="footer-nav">
+      <a href="#chapter-1">01. Sub-Strata</a>
+      <a href="#chapter-2">02. Cyber Metropolis</a>
+      <a href="#chapter-3">03. Mecha Assembly</a>
+      <a href="#chapter-4">04. Stratosphere</a>
+      <a href="#chapter-5">05. Singularity Horizon</a>
+      <a href="https://techfest.org" target="_blank" rel="noopener">Techfest 2026</a>
+      <a href="https://ca.techfest.org/tasks/web-development" target="_blank" rel="noopener">CA Task Reference</a>
+    </div>
+    <p>© 2026 Techfest, IIT Bombay. Asia's Largest Science & Technology Festival. All rights reserved.</p>
+    <p class="footer-credits">Engineered with hardware-accelerated CSS3 transforms, 60 FPS Canvas & zero-dependency Web Audio API.</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/audio.js"></script>
+  <script src="js/canvas-fx.js"></script>
+  <script src="js/parallax.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

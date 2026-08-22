@@ -1,0 +1,1676 @@
+/* ==========================================================================
+   TECHFEST 2026 // ACTIVITY-3: INTERACTIVE PARALLAX SCROLLING ODYSSEY
+   Theme: Synthetic Frontier & Cyber-Ascent (Sub-Strata to Deep Cosmos)
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap');
+
+/* --- Root Color Matrices & Theme Variables --- */
+:root {
+  --font-display: 'Orbitron', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: 'Rajdhani', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'Share Tech Mono', monospace;
+
+  /* Default Theme: Neo-Cyan */
+  --primary: #00f3ff;
+  --primary-rgb: 0, 243, 255;
+  --primary-glow: rgba(0, 243, 255, 0.4);
+  --primary-subtle: rgba(0, 243, 255, 0.12);
+  --secondary: #7928ca;
+  --secondary-rgb: 121, 40, 202;
+  --accent: #ff007f;
+  --accent-rgb: 255, 0, 127;
+  
+  --bg-deep: #02040a;
+  --bg-dark: #070d1e;
+  --bg-card: rgba(8, 16, 38, 0.75);
+  --bg-card-border: rgba(0, 243, 255, 0.25);
+  --text-main: #f0f6fc;
+  --text-muted: #8b949e;
+  --text-dim: #484f58;
+
+  --hud-bg: rgba(3, 7, 18, 0.85);
+  --hud-border: rgba(0, 243, 255, 0.3);
+  --scanline-opacity: 0.12;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-smooth: cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Theme 2: Crimson Berserk */
+body.theme-crimson {
+  --primary: #ff0055;
+  --primary-rgb: 255, 0, 85;
+  --primary-glow: rgba(255, 0, 85, 0.45);
+  --primary-subtle: rgba(255, 0, 85, 0.14);
+  --secondary: #ff5500;
+  --secondary-rgb: 255, 85, 0;
+  --accent: #00f3ff;
+  --accent-rgb: 0, 243, 255;
+  --bg-dark: #140409;
+  --bg-card: rgba(26, 6, 14, 0.8);
+  --bg-card-border: rgba(255, 0, 85, 0.3);
+  --hud-border: rgba(255, 0, 85, 0.4);
+}
+
+/* Theme 3: Matrix Emerald */
+body.theme-matrix {
+  --primary: #00ff88;
+  --primary-rgb: 0, 255, 136;
+  --primary-glow: rgba(0, 255, 136, 0.45);
+  --primary-subtle: rgba(0, 255, 136, 0.12);
+  --secondary: #00bbff;
+  --secondary-rgb: 0, 187, 255;
+  --accent: #eaff00;
+  --accent-rgb: 234, 255, 0;
+  --bg-dark: #021209;
+  --bg-card: rgba(4, 24, 12, 0.8);
+  --bg-card-border: rgba(0, 255, 136, 0.3);
+  --hud-border: rgba(0, 255, 136, 0.4);
+}
+
+/* Theme 4: Solar Cyber-Gold */
+body.theme-gold {
+  --primary: #ffbb00;
+  --primary-rgb: 255, 187, 0;
+  --primary-glow: rgba(255, 187, 0, 0.45);
+  --primary-subtle: rgba(255, 187, 0, 0.14);
+  --secondary: #ff3c00;
+  --secondary-rgb: 255, 60, 0;
+  --accent: #00f3ff;
+  --accent-rgb: 0, 243, 255;
+  --bg-dark: #120d02;
+  --bg-card: rgba(26, 18, 4, 0.8);
+  --bg-card-border: rgba(255, 187, 0, 0.3);
+  --hud-border: rgba(255, 187, 0, 0.4);
+}
+
+/* --- Base & Reset --- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: auto; /* Handled smoothly by our lerp engine */
+  background-color: var(--bg-deep);
+  color: var(--text-main);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  overscroll-behavior-y: none;
+}
+
+body {
+  position: relative;
+  min-height: 100vh;
+  line-height: 1.5;
+  letter-spacing: 0.03em;
+  background: var(--bg-deep);
+  overflow-x: hidden;
+  user-select: none;
+  cursor: default;
+  transition: background-color 0.6s var(--ease-smooth);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(2, 4, 10, 0.95);
+  border-left: 1px solid rgba(var(--primary-rgb), 0.15);
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--primary), var(--secondary));
+  border-radius: 4px;
+  box-shadow: 0 0 10px var(--primary-glow);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+  box-shadow: 0 0 16px var(--primary);
+}
+
+/* --- Fullscreen Canvas & Overlay Layers --- */
+#bg-canvas, #fx-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 1;
+}
+
+#fx-canvas {
+  z-index: 50; /* Above regular content for warp speed & shockwaves */
+}
+
+/* CRT Scanlines Overlay */
+.crt-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, var(--scanline-opacity)) 0px,
+    rgba(0, 0, 0, var(--scanline-opacity)) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  z-index: 99;
+}
+
+/* Cyber Grid Vignette */
+.cyber-vignette {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  background: radial-gradient(circle at center, transparent 45%, rgba(2, 4, 10, 0.85) 100%);
+  z-index: 2;
+}
+
+/* Custom Target Reticle Cursor */
+.custom-cursor {
+  position: fixed;
+  width: 24px;
+  height: 24px;
+  border: 1.5px solid var(--primary);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 1000;
+  transition: width 0.2s, height 0.2s, border-color 0.3s, background-color 0.2s;
+  box-shadow: 0 0 10px var(--primary-glow);
+}
+.custom-cursor::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 4px;
+  height: 4px;
+  background: var(--primary);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+.custom-cursor.active {
+  width: 40px;
+  height: 40px;
+  border-color: var(--accent);
+  background: rgba(var(--primary-rgb), 0.15);
+}
+
+/* ==========================================================================
+   TACTICAL HUD (HEADER, DEPTH METER, WARP GAUGE & NAVIGATION)
+   ========================================================================== */
+
+.tactical-hud {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(180deg, rgba(2, 4, 10, 0.92) 0%, rgba(2, 4, 10, 0.4) 75%, transparent 100%);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(var(--primary-rgb), 0.2);
+}
+
+.hud-left {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.brand-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+  color: var(--text-main);
+}
+
+.brand-logo-icon {
+  width: 36px;
+  height: 36px;
+  border: 1.5px solid var(--primary);
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+  background: var(--primary-subtle);
+  box-shadow: 0 0 15px var(--primary-glow);
+  position: relative;
+  overflow: hidden;
+}
+
+.brand-logo-icon svg {
+  width: 22px;
+  height: 22px;
+  fill: var(--primary);
+}
+
+.brand-text h1 {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  line-height: 1.1;
+  color: #fff;
+  text-shadow: 0 0 12px var(--primary-glow);
+}
+
+.brand-text span {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--primary);
+  letter-spacing: 0.2em;
+}
+
+/* HUD Chapter Navigation Links */
+.hud-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: 1rem;
+  padding-left: 1rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.hud-nav-btn {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  padding: 0.3rem 0.65rem;
+  border-radius: 4px;
+  text-decoration: none;
+  color: var(--text-muted);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.03);
+  transition: all 0.25s ease;
+  letter-spacing: 0.05em;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.hud-nav-btn:hover {
+  color: var(--primary);
+  border-color: var(--primary);
+  background: var(--primary-subtle);
+  box-shadow: 0 0 10px var(--primary-glow);
+}
+
+.hud-nav-btn.active {
+  color: #000;
+  background: var(--primary);
+  border-color: var(--primary);
+  font-weight: 700;
+  box-shadow: 0 0 14px var(--primary-glow);
+}
+
+/* Live Telemetry Hub in Header Center */
+.hud-telemetry {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  background: rgba(4, 9, 24, 0.75);
+  border: 1px solid var(--hud-border);
+  padding: 0.35rem 1rem;
+  border-radius: 30px;
+  box-shadow: inset 0 0 15px rgba(var(--primary-rgb), 0.1);
+}
+
+.telemetry-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.telemetry-label {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.telemetry-val {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--primary);
+  letter-spacing: 0.05em;
+}
+
+.telemetry-val.warp-active {
+  color: var(--accent);
+  animation: warpPulse 0.4s infinite alternate;
+}
+
+@keyframes warpPulse {
+  0% { transform: scale(1); text-shadow: 0 0 8px var(--accent); }
+  100% { transform: scale(1.1); text-shadow: 0 0 20px var(--accent), 0 0 35px var(--accent); }
+}
+
+.telemetry-divider {
+  width: 1px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* HUD Controls Right */
+.hud-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.hud-ctrl-btn {
+  background: rgba(8, 16, 38, 0.8);
+  border: 1px solid var(--hud-border);
+  color: var(--text-main);
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.25s ease;
+}
+
+.hud-ctrl-btn:hover {
+  background: var(--primary-subtle);
+  border-color: var(--primary);
+  color: var(--primary);
+  box-shadow: 0 0 15px var(--primary-glow);
+  transform: translateY(-1px);
+}
+
+.hud-ctrl-btn.active {
+  border-color: var(--primary);
+  background: rgba(var(--primary-rgb), 0.2);
+  color: var(--primary);
+  box-shadow: 0 0 15px var(--primary-glow);
+}
+
+/* Audio EQ Equalizer Visualizer Bars */
+.eq-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 14px;
+  width: 16px;
+}
+
+.eq-bar {
+  width: 3px;
+  background: var(--primary);
+  border-radius: 1px;
+  height: 4px;
+  transition: height 0.1s ease;
+}
+
+.audio-on .eq-bar:nth-child(1) { animation: eqJump 0.6s infinite ease-in-out alternate; }
+.audio-on .eq-bar:nth-child(2) { animation: eqJump 0.4s infinite 0.15s ease-in-out alternate; }
+.audio-on .eq-bar:nth-child(3) { animation: eqJump 0.8s infinite 0.3s ease-in-out alternate; }
+.audio-on .eq-bar:nth-child(4) { animation: eqJump 0.5s infinite 0.45s ease-in-out alternate; }
+
+@keyframes eqJump {
+  0% { height: 3px; }
+  100% { height: 14px; }
+}
+
+/* Theme Selector Dropdown / Pills */
+.theme-matrix-pills {
+  display: flex;
+  gap: 0.3rem;
+  background: rgba(2, 4, 10, 0.8);
+  padding: 0.25rem;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.theme-pill {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.theme-pill:hover {
+  transform: scale(1.2);
+}
+
+.theme-pill.active {
+  border-color: #fff;
+  box-shadow: 0 0 8px currentColor;
+}
+
+.theme-pill.cyan { background-color: #00f3ff; }
+.theme-pill.crimson { background-color: #ff0055; }
+.theme-pill.matrix { background-color: #00ff88; }
+.theme-pill.gold { background-color: #ffbb00; }
+
+/* ==========================================================================
+   VERTICAL CHAPTER NAVIGATOR & MINIMAP (FIXED RIGHT)
+   ========================================================================== */
+
+.chapter-navigator {
+  position: fixed;
+  right: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 90;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1.25rem;
+}
+
+.nav-track {
+  position: absolute;
+  right: 7px;
+  top: 10px;
+  bottom: 10px;
+  width: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  z-index: 1;
+}
+
+.nav-progress-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 0%;
+  background: linear-gradient(180deg, var(--primary), var(--secondary));
+  box-shadow: 0 0 10px var(--primary);
+  transition: height 0.1s linear;
+}
+
+.chapter-node {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.chapter-tooltip {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  background: rgba(2, 4, 10, 0.9);
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  border: 1px solid rgba(var(--primary-rgb), 0.2);
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateX(10px);
+  transition: all 0.25s ease;
+  pointer-events: none;
+}
+
+.chapter-node:hover .chapter-tooltip,
+.chapter-node.active .chapter-tooltip {
+  opacity: 1;
+  transform: translateX(0);
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+.chapter-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--bg-deep);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  display: grid;
+  place-items: center;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.chapter-dot-inner {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: transparent;
+  transition: all 0.3s ease;
+}
+
+.chapter-node:hover .chapter-dot {
+  border-color: var(--primary);
+  transform: scale(1.2);
+  box-shadow: 0 0 12px var(--primary-glow);
+}
+
+.chapter-node.active .chapter-dot {
+  border-color: var(--primary);
+  background: rgba(var(--primary-rgb), 0.2);
+  transform: scale(1.35);
+  box-shadow: 0 0 16px var(--primary-glow);
+}
+
+.chapter-node.active .chapter-dot-inner {
+  background: var(--primary);
+  box-shadow: 0 0 8px var(--primary);
+}
+
+/* ==========================================================================
+   PARALLAX CONTAINER & BASE SECTION LAYOUT
+   ========================================================================== */
+
+.parallax-container {
+  position: relative;
+  width: 100%;
+  perspective: 1000px;
+  perspective-origin: center center;
+  transform-style: preserve-3d;
+}
+
+.parallax-section {
+  position: relative;
+  width: 100vw;
+  min-height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 6rem 2rem;
+  box-sizing: border-box;
+}
+
+/* Parallax Layers System */
+.parallax-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  will-change: transform;
+  transform-origin: center center;
+}
+
+.parallax-layer.interactive {
+  pointer-events: auto;
+}
+
+.section-content {
+  position: relative;
+  z-index: 10;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  pointer-events: auto;
+}
+
+/* Cyber Section Badges & Headings */
+.section-tag {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.3em;
+  color: var(--primary);
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.75rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: 4px;
+  background: var(--primary-subtle);
+  border-left: 3px solid var(--primary);
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 5vw, 4.2rem);
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 0 0 30px var(--primary-glow);
+  margin-bottom: 1rem;
+}
+
+.section-subtitle {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  font-weight: 500;
+  color: var(--text-muted);
+  max-width: 680px;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+/* Global Cyber Buttons */
+.cyber-btn-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+}
+
+.cyber-btn {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 0.85rem 1.75rem;
+  border: 1px solid var(--primary);
+  border-radius: 4px;
+  color: #000;
+  background: var(--primary);
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  box-shadow: 0 0 20px var(--primary-glow);
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.cyber-btn:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 0 35px var(--primary), 0 0 60px var(--primary-glow);
+}
+
+.cyber-btn.outline {
+  background: rgba(var(--primary-rgb), 0.05);
+  color: var(--primary);
+  border: 1px solid rgba(var(--primary-rgb), 0.4);
+  box-shadow: none;
+}
+
+.cyber-btn.outline:hover {
+  background: var(--primary-subtle);
+  border-color: var(--primary);
+  box-shadow: 0 0 25px var(--primary-glow);
+  color: #fff;
+}
+
+.cyber-btn.pulse-glow {
+  animation: btnNeonPulse 2s infinite ease-in-out;
+}
+
+@keyframes btnNeonPulse {
+  0%, 100% { box-shadow: 0 0 15px var(--primary-glow); }
+  50% { box-shadow: 0 0 35px var(--primary), 0 0 50px var(--primary-glow); }
+}
+
+/* ==========================================================================
+   CHAPTER 01 // THE QUANTUM SUB-STRATA (-10,000m DEPTH)
+   ========================================================================== */
+
+#chapter-1 {
+  background: radial-gradient(circle at bottom center, #071329 0%, #02040a 80%);
+  min-height: 120vh;
+}
+
+/* Sub-strata Energy Pillars */
+.substrata-pillars {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 60%;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0px,
+    transparent 120px,
+    rgba(var(--primary-rgb), 0.06) 120px,
+    rgba(var(--primary-rgb), 0.06) 140px
+  );
+  mask-image: linear-gradient(0deg, black 30%, transparent 100%);
+}
+
+.substrata-core-orb {
+  position: absolute;
+  bottom: -150px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--primary) 0%, rgba(var(--secondary-rgb), 0.4) 50%, transparent 80%);
+  filter: blur(40px);
+  opacity: 0.6;
+  animation: orbPulse 4s infinite alternate ease-in-out;
+}
+
+@keyframes orbPulse {
+  0% { transform: translateX(-50%) scale(0.85); opacity: 0.4; }
+  100% { transform: translateX(-50%) scale(1.15); opacity: 0.75; }
+}
+
+.substrata-grid-floor {
+  position: absolute;
+  bottom: 0;
+  left: -50%;
+  width: 200%;
+  height: 500px;
+  background-image: 
+    linear-gradient(rgba(var(--primary-rgb), 0.25) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(var(--primary-rgb), 0.25) 1px, transparent 1px);
+  background-size: 60px 60px;
+  transform: perspective(400px) rotateX(65deg);
+  transform-origin: bottom center;
+  mask-image: linear-gradient(0deg, black 40%, transparent 100%);
+}
+
+.hero-stats-strip {
+  margin-top: 3rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.5rem;
+  max-width: 850px;
+}
+
+.hero-stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--bg-card-border);
+  padding: 1rem 1.25rem;
+  border-radius: 8px;
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--primary), transparent);
+}
+
+.hero-stat-val {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--primary);
+  letter-spacing: 0.05em;
+}
+
+.hero-stat-desc {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Scroll Hint Indicator */
+.scroll-indicator {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  animation: floatDown 2s infinite ease-in-out;
+  cursor: pointer;
+  z-index: 20;
+}
+
+.mouse-icon {
+  width: 22px;
+  height: 36px;
+  border: 2px solid var(--primary);
+  border-radius: 12px;
+  position: relative;
+}
+
+.mouse-wheel {
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 6px;
+  background: var(--primary);
+  border-radius: 2px;
+  animation: mouseScroll 1.5s infinite;
+}
+
+@keyframes mouseScroll {
+  0% { transform: translate(-50%, 0); opacity: 1; }
+  100% { transform: translate(-50%, 14px); opacity: 0; }
+}
+
+@keyframes floatDown {
+  0%, 100% { transform: translate(-50%, 0); }
+  50% { transform: translate(-50%, 8px); }
+}
+
+/* ==========================================================================
+   CHAPTER 02 // NEO-MUMBAI 2026 CYBER METROPOLIS (0m GROUND ZERO)
+   ========================================================================== */
+
+#chapter-2 {
+  background: linear-gradient(180deg, #02040a 0%, #080f24 40%, #04091a 100%);
+  min-height: 140vh;
+}
+
+/* Layered City Vector Silhouettes */
+.city-backdrop {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.skyline-layer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  will-change: transform;
+}
+
+.skyline-far {
+  height: 450px;
+  opacity: 0.45;
+  filter: drop-shadow(0 0 15px rgba(var(--primary-rgb), 0.2));
+}
+
+.skyline-mid {
+  height: 520px;
+  opacity: 0.8;
+  filter: drop-shadow(0 0 25px rgba(var(--primary-rgb), 0.35));
+}
+
+.skyline-near {
+  height: 380px;
+  opacity: 0.95;
+}
+
+/* Animated Aerocars & Skyway Transit */
+.transit-skyway {
+  position: absolute;
+  width: 120%;
+  left: -10%;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, rgba(var(--primary-rgb), 0.6), transparent);
+  box-shadow: 0 0 12px var(--primary);
+  transform: rotate(-3deg);
+}
+
+.aerocar {
+  position: absolute;
+  width: 45px;
+  height: 12px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #fff, var(--primary));
+  box-shadow: 0 0 18px var(--primary), -25px 0 20px var(--accent);
+  animation: cruiseAcross 12s linear infinite;
+}
+
+.aerocar.reverse {
+  background: linear-gradient(270deg, #fff, var(--accent));
+  box-shadow: 0 0 18px var(--accent), 25px 0 20px var(--primary);
+  animation: cruiseAcrossRev 16s linear infinite;
+}
+
+@keyframes cruiseAcross {
+  0% { left: -10%; }
+  100% { left: 110%; }
+}
+
+@keyframes cruiseAcrossRev {
+  0% { left: 110%; }
+  100% { left: -10%; }
+}
+
+/* Interactive X-Ray Circuit Scanner Lens Feature */
+.xray-scanner-container {
+  position: relative;
+  margin-top: 2.5rem;
+  width: 100%;
+  height: 420px;
+  border-radius: 12px;
+  border: 1px solid var(--bg-card-border);
+  overflow: hidden;
+  background: rgba(4, 9, 24, 0.85);
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+  cursor: crosshair;
+}
+
+.xray-normal-layer, .xray-circuit-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 2.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.xray-normal-layer {
+  z-index: 1;
+  background: radial-gradient(circle at center, rgba(8, 20, 50, 0.4) 0%, rgba(2, 4, 10, 0.9) 100%);
+}
+
+.xray-circuit-layer {
+  z-index: 2;
+  background: 
+    radial-gradient(circle at center, rgba(var(--primary-rgb), 0.2) 0%, rgba(2, 8, 20, 0.95) 100%),
+    repeating-linear-gradient(0deg, rgba(var(--primary-rgb), 0.15) 0px, rgba(var(--primary-rgb), 0.15) 1px, transparent 1px, transparent 20px),
+    repeating-linear-gradient(90deg, rgba(var(--primary-rgb), 0.15) 0px, rgba(var(--primary-rgb), 0.15) 1px, transparent 1px, transparent 20px);
+  clip-path: circle(120px at var(--lens-x, 50%) var(--lens-y, 50%));
+  transition: clip-path 0.05s ease-out;
+  border-color: var(--primary);
+}
+
+.xray-lens-reticle {
+  position: absolute;
+  top: var(--lens-y, 50%);
+  left: var(--lens-x, 50%);
+  width: 240px;
+  height: 240px;
+  border: 2px dashed var(--primary);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 3;
+  box-shadow: 0 0 30px var(--primary-glow), inset 0 0 20px var(--primary-glow);
+  animation: rotateLens 20s linear infinite;
+}
+
+@keyframes rotateLens {
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.xray-lens-label {
+  position: absolute;
+  top: -24px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--primary);
+  letter-spacing: 0.15em;
+  background: rgba(2, 4, 10, 0.95);
+  padding: 0.1rem 0.5rem;
+  border-radius: 3px;
+  border: 1px solid var(--primary);
+  white-space: nowrap;
+}
+
+.metropolis-card {
+  max-width: 480px;
+}
+
+.metropolis-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  color: #fff;
+  margin-bottom: 0.75rem;
+}
+
+.metropolis-card p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.circuit-schematic-hud {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--primary);
+  line-height: 1.8;
+  border: 1px solid rgba(var(--primary-rgb), 0.4);
+  padding: 1.25rem;
+  background: rgba(2, 6, 18, 0.85);
+  border-radius: 6px;
+}
+
+/* ==========================================================================
+   CHAPTER 03 // THE MECHA NEXUS (PINNED EXPLODED SCRUBBING VIEW)
+   ========================================================================== */
+
+.pinned-scroll-wrapper {
+  position: relative;
+  width: 100vw;
+  height: 300vh; /* 300vh provides ample scrub depth */
+}
+
+.pinned-viewport {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  background: radial-gradient(circle at center, #0a1636 0%, #02040a 85%);
+  padding: 4rem 2rem;
+  box-sizing: border-box;
+}
+
+.mecha-scrub-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  z-index: 10;
+}
+
+.mecha-scrub-progress {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--primary);
+}
+
+.scrub-track {
+  width: 200px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.scrub-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--primary);
+  box-shadow: 0 0 10px var(--primary);
+  transition: width 0.1s linear;
+}
+
+/* Exploding Mecha Assembly Stage */
+.mecha-stage {
+  position: relative;
+  width: 700px;
+  height: 450px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  perspective: 1200px;
+}
+
+.mecha-core-structure {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  transform-style: preserve-3d;
+}
+
+/* Individual Exploding Mecha Components */
+.mecha-part {
+  position: absolute;
+  will-change: transform, opacity;
+  transition: transform 0.1s linear;
+}
+
+/* Part 1: Cranium Helmet & Neural Visor */
+.part-cranium {
+  top: 15px;
+  width: 180px;
+  height: 90px;
+}
+
+/* Part 2: Left Armor Shoulder Plate */
+.part-armor-left {
+  left: 60px;
+  top: 110px;
+  width: 130px;
+  height: 160px;
+}
+
+/* Part 3: Right Armor Shoulder Plate */
+.part-armor-right {
+  right: 60px;
+  top: 110px;
+  width: 130px;
+  height: 160px;
+}
+
+/* Part 4: Central Tachyon Arc Reactor */
+.part-reactor {
+  top: 130px;
+  width: 160px;
+  height: 160px;
+  display: grid;
+  place-items: center;
+}
+
+.reactor-ring-outer {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  border: 3px dashed var(--primary);
+  position: absolute;
+  animation: spinClockwise 12s linear infinite;
+  box-shadow: 0 0 25px var(--primary-glow);
+}
+
+.reactor-ring-inner {
+  width: 95px;
+  height: 95px;
+  border-radius: 50%;
+  border: 2.5px solid var(--accent);
+  position: absolute;
+  animation: spinCounter 8s linear infinite;
+  box-shadow: 0 0 20px rgba(var(--accent-rgb), 0.5);
+}
+
+.reactor-core-glow {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff 0%, var(--primary) 60%, transparent 100%);
+  box-shadow: 0 0 35px var(--primary), 0 0 60px var(--primary);
+}
+
+@keyframes spinClockwise { 100% { transform: rotate(360deg); } }
+@keyframes spinCounter { 100% { transform: rotate(-360deg); } }
+
+/* Part 5: Hydraulic Spine & Rib Chassis */
+.part-chassis {
+  top: 250px;
+  width: 190px;
+  height: 140px;
+}
+
+/* Exploded Callout Annotations & SVG HUD Lines */
+.exploded-callouts {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.callout-tag {
+  position: absolute;
+  background: rgba(3, 7, 18, 0.9);
+  border: 1px solid var(--primary);
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: #fff;
+  box-shadow: 0 0 15px var(--primary-glow);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  white-space: nowrap;
+}
+
+.callout-tag span {
+  color: var(--primary);
+  font-weight: 700;
+  display: block;
+}
+
+.callout-1 { top: 30px; left: 30px; }
+.callout-2 { top: 130px; right: 20px; }
+.callout-3 { bottom: 120px; left: 20px; }
+.callout-4 { bottom: 30px; right: 30px; }
+
+.callout-tag.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ==========================================================================
+   CHAPTER 04 // STRATOSPHERIC GATEWAY (+50,000m ALTITUDE)
+   ========================================================================== */
+
+#chapter-4 {
+  background: linear-gradient(180deg, #04091a 0%, #030614 60%, #010206 100%);
+  min-height: 130vh;
+}
+
+/* Space Elevator Cables */
+.elevator-tether {
+  position: absolute;
+  top: 0;
+  left: 30%;
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(var(--primary-rgb), 0.8), rgba(var(--secondary-rgb), 0.3), transparent);
+  box-shadow: 0 0 12px var(--primary);
+}
+
+.elevator-tether.second {
+  left: 70%;
+  background: linear-gradient(180deg, rgba(var(--accent-rgb), 0.8), rgba(var(--primary-rgb), 0.3), transparent);
+  box-shadow: 0 0 12px var(--accent);
+}
+
+.elevator-pod {
+  position: absolute;
+  width: 14px;
+  height: 35px;
+  background: #fff;
+  border-radius: 3px;
+  box-shadow: 0 0 20px var(--primary), 0 0 40px var(--primary);
+  animation: elevatorAscent 10s infinite linear;
+}
+
+@keyframes elevatorAscent {
+  0% { top: 110%; }
+  100% { top: -10%; }
+}
+
+.supersonic-rings {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  border: 2px solid rgba(var(--primary-rgb), 0.2);
+  animation: sonicPulse 6s infinite ease-out;
+  pointer-events: none;
+}
+
+@keyframes sonicPulse {
+  0% { transform: translate(-50%, -50%) scale(0.2); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(1.8); opacity: 0; }
+}
+
+.space-portal-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+
+.gateway-feature-card {
+  background: var(--bg-card);
+  border: 1px solid var(--bg-card-border);
+  padding: 1.75rem;
+  border-radius: 8px;
+  backdrop-filter: blur(12px);
+  position: relative;
+  transition: transform 0.3s var(--ease-out-expo), border-color 0.3s, box-shadow 0.3s;
+}
+
+.gateway-feature-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--primary);
+  box-shadow: 0 10px 30px rgba(var(--primary-rgb), 0.25);
+}
+
+.gateway-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  background: var(--primary-subtle);
+  border: 1px solid var(--primary);
+  display: grid;
+  place-items: center;
+  margin-bottom: 1.25rem;
+  color: var(--primary);
+  box-shadow: 0 0 15px var(--primary-glow);
+}
+
+.gateway-feature-card h4 {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.gateway-feature-card p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+/* ==========================================================================
+   CHAPTER 05 // THE SINGULARITY HORIZON (DEEP COSMOS & EVENT MONOLITHS)
+   ========================================================================== */
+
+#chapter-5 {
+  background: radial-gradient(circle at center, #060e28 0%, #010206 90%);
+  min-height: 150vh;
+}
+
+/* Cosmic Singularity Swirling Portal */
+.cosmic-singularity-portal {
+  position: absolute;
+  top: 25%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 750px;
+  height: 750px;
+  border-radius: 50%;
+  background: radial-gradient(circle, transparent 20%, rgba(var(--primary-rgb), 0.15) 50%, rgba(var(--secondary-rgb), 0.25) 70%, transparent 85%);
+  filter: blur(25px);
+  animation: rotateWormhole 35s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes rotateWormhole {
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* 3D Tilt Flagship Arena Monolith Cards */
+.monolith-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+  margin-top: 3rem;
+  perspective: 1000px;
+}
+
+.monolith-card {
+  background: rgba(6, 12, 30, 0.85);
+  border: 1px solid rgba(var(--primary-rgb), 0.3);
+  border-radius: 12px;
+  padding: 2rem 1.5rem;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.15s ease-out, border-color 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+  overflow: hidden;
+  backdrop-filter: blur(14px);
+}
+
+.monolith-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+}
+
+.monolith-card:hover {
+  border-color: var(--primary);
+  box-shadow: 0 15px 40px rgba(var(--primary-rgb), 0.35);
+}
+
+.monolith-badge {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--primary);
+  letter-spacing: 0.15em;
+  background: var(--primary-subtle);
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  display: inline-block;
+  margin-bottom: 1rem;
+}
+
+.monolith-card h4 {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  color: #fff;
+  margin-bottom: 0.75rem;
+}
+
+.monolith-card p {
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.monolith-prize {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* Mission Certificate Minting Hub */
+.certificate-hub {
+  margin-top: 5rem;
+  background: linear-gradient(135deg, rgba(8, 16, 38, 0.95), rgba(4, 8, 20, 0.98));
+  border: 1px solid var(--primary);
+  border-radius: 12px;
+  padding: 3rem;
+  box-shadow: 0 0 50px rgba(var(--primary-rgb), 0.25);
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 3rem;
+  align-items: center;
+}
+
+.cert-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.cert-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.cert-form-group label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--primary);
+  letter-spacing: 0.1em;
+}
+
+.cert-input {
+  background: rgba(2, 4, 10, 0.8);
+  border: 1px solid rgba(var(--primary-rgb), 0.3);
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+
+.cert-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 15px var(--primary-glow);
+}
+
+.cert-preview-card {
+  position: relative;
+  background: radial-gradient(circle at top right, rgba(var(--primary-rgb), 0.15) 0%, rgba(2, 4, 10, 0.95) 70%);
+  border: 2px solid var(--primary);
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 0 30px var(--primary-glow);
+}
+
+.cert-preview-header {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(var(--primary-rgb), 0.3);
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.cert-preview-title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: #fff;
+  letter-spacing: 0.1em;
+}
+
+.cert-preview-id {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--primary);
+}
+
+.cert-agent-name {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: var(--primary);
+  letter-spacing: 0.08em;
+  margin-bottom: 0.5rem;
+}
+
+.cert-desc {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.cert-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   BOTTOM TACTICAL DOCK & FOOTER
+   ========================================================================== */
+
+.parallax-footer {
+  position: relative;
+  z-index: 20;
+  background: rgba(2, 4, 10, 0.98);
+  border-top: 1px solid rgba(var(--primary-rgb), 0.2);
+  padding: 3rem 2rem 2rem;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.footer-nav {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.footer-nav a {
+  color: var(--text-main);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footer-nav a:hover {
+  color: var(--primary);
+}
+
+.footer-credits {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN & MEDIA QUERIES
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  .certificate-hub {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 2rem;
+  }
+  
+  .mecha-stage {
+    width: 90vw;
+    height: 400px;
+  }
+}
+
+@media (max-width: 768px) {
+  .tactical-hud {
+    padding: 0.75rem 1rem;
+  }
+
+  .activity-switchers, .hud-telemetry {
+    display: none;
+  }
+
+  .chapter-navigator {
+    right: 0.75rem;
+  }
+
+  .section-title {
+    font-size: 2.2rem;
+  }
+
+  .xray-scanner-container {
+    height: 320px;
+  }
+
+  .mecha-stage {
+    transform: scale(0.75);
+  }
+
+  .hero-stats-strip {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-stats-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .cyber-btn-group {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .cyber-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
