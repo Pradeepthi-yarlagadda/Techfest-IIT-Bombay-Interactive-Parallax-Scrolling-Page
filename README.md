@@ -1,9 +1,7 @@
 # 🌌 CYBER-ODYSSEY: Synthetic Frontier
 
 ### TECHFEST 2026 
-// Activity-3: Interactive Parallax Scrolling Odyssey
-
-**Task Reference:** [Techfest IIT Bombay CA Web Development Portal](https://ca.techfest.org/tasks/web-development)
+/// Activity-3: Interactive Parallax Scrolling Odyssey
 
 ---
 
