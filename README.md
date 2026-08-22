@@ -1,7 +1,7 @@
 # 🌌 CYBER-ODYSSEY: Synthetic Frontier
 
 ### TECHFEST 2026 
-** Activity-3: Interactive Parallax Scrolling Odyssey **
+## Activity-3: Interactive Parallax Scrolling Odyssey 
 
 ---
 
