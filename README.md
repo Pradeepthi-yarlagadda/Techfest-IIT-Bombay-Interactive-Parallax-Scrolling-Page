@@ -1,126 +1,82 @@
-# 🌌 TECHFEST 2026 // ACTIVITY-3: INTERACTIVE PARALLAX SCROLLING ODYSSEY
-### Multi-Layered Vertical & Horizontal Cyber Ascent (Sub-Strata to Deep Cosmos)
-### Task Reference: [https://ca.techfest.org/tasks/web-development](https://ca.techfest.org/tasks/web-development)
+# 🌌 CYBER-ODYSSEY: Synthetic Frontier
 
-[![Techfest](https://img.shields.io/badge/Techfest-IIT%20Bombay-00f3ff?style=for-the-badge&logo=atom)](https://techfest.org)
-[![CA Portal](https://img.shields.io/badge/CA%20Task-Interactive%20Parallax%20Scrolling-00ff88?style=for-the-badge)](https://ca.techfest.org/tasks/web-development)
-[![Points](https://img.shields.io/badge/Task%20Points-150%20PTS-ffbb00?style=for-the-badge)](https://ca.techfest.org/tasks/web-development)
-[![Theme](https://img.shields.io/badge/Theme-Synthetic%20Frontier-ff007f?style=for-the-badge)](https://techfest.org)
+### TECHFEST 2026 // Activity-3: Interactive Parallax Scrolling Odyssey
+
+**Task Reference:** [Techfest IIT Bombay CA Web Development Portal](https://ca.techfest.org/tasks/web-development)
 
 ---
 
-## ⚡ Overview & CA Task Alignment
+## ⚡ Overview
 
-**Activity-3** is the official submission for the **"Interactive Parallax Scrolling Page"** (150 Points) on the **Techfest IIT Bombay College Ambassador (CA) Web Development Challenge** ([https://ca.techfest.org/tasks/web-development](https://ca.techfest.org/tasks/web-development)).
+**CYBER-ODYSSEY** is a high-performance, fully immersive **Interactive Parallax Scrolling Web Application** built as the official submission for Activity-3 (150 Points) of the **Techfest IIT Bombay College Ambassador Web Development Challenge**.
 
-It creates a multi-layered vertical and horizontal narrative journey titled **"CYBER-ODYSSEY: Synthetic Frontier"**, taking the user on an ascent from the subterranean quantum core (`-10,000m`), through the neon-lit Neo-Mumbai / IIT Bombay skyline (`0m`), past an exploded Mecha assembly (`+5,000m`), through the stratospheric space elevator corridor (`+50,000m`), and into deep cosmos (`+384,000km`).
-
----
-
-## 🌌 Key Features & Highlights
-
-### 1. 🚀 5-Chapter Multi-Layered Parallax Odyssey
-- **Chapter 01 // The Quantum Sub-Strata (`-10,000m`)**:
-  - Deep subterranean atmosphere with pulsating quantum plasma core, rotating 3D perspective floor grid, and moving energy pillars.
-  - Live festival statistics (`₹50L+` prize pool, `175,000+` footfall, `2,500+` colleges).
-- **Chapter 02 // Neo-Mumbai 2026 Cyber Metropolis (`0m Ground Zero`)**:
-  - 3 distinct skyline silhouette depth layers moving at differential speeds (`0.2x`, `0.45x`, `0.75x`).
-  - Animated flying aerocars and illuminated skyway monorails cruising across the cityscape.
-  - **Interactive X-Ray Circuit Scanner Lens**: Move or drag your cursor across the IIT Bombay innovation complex to reveal hidden internal superconducting nanite circuitry and cryogenic power buses.
-- **Chapter 03 // The Mecha Nexus: Exploded Biomechanical Assembly (`+5,000m`)**:
-  - Pinned viewport with scroll-driven scrubbing physics.
-  - As you scroll, a giant cybernetic mecha expands and disassembles into its sub-assemblies (Neural Cranium Visor, Left/Right Titan Armor Plates, Central Rotating Tachyon Arc Reactor, Hydraulic Spine).
-  - Dynamic SVG HUD callout annotations reveal component specifications when scrubbing past 35%.
-- **Chapter 04 // Stratospheric Gateway (`+50,000m`)**:
-  - Carbon-nanotube space elevator tethers with ascending magnetic pods.
-  - Supersonic expanding atmospheric shockwave rings and high-speed orbital shuttle swarms.
-  - Features overview: Orbital Swarm Defense, Ion Propulsion, Solar Flux Harvesting.
-- **Chapter 05 // The Singularity Horizon (`Deep Cosmos / +384,000km`)**:
-  - Swirling celestial wormhole singularity with 3D starfield canvas depth.
-  - **4 3D-Tilt Flagship Arena Monoliths**: Robowars, AI Cyber Matrix, Drone Swarms, and Quantum FinTech featuring 3D perspective tilt reacting to cursor angles.
+The application takes users on a multi-layered vertical and horizontal cyber ascent—starting from the deep subterranean quantum core (`-10,000m`), passing through the neon-drenched Neo-Mumbai skyline (`0m`), scrubbing through an exploded biomechanical mecha assembly (`+5,000m`), ascending past stratospheric space elevator tethers (`+50,000m`), and culminating in deep cosmic singularity (`+384,000km`).
 
 ---
 
-### 2. 🎛️ Tactical Telemetry HUD & Controls
-- **Live Altitude / Depth Meter**: Continuously computes vertical altitude ranging from `-10,000 M` to `+384,000 KM`.
-- **Velocity Tracker & Warp-Speed Relativistic Streaks**: Measures real-time scroll velocity in KPH. Rapid scrolling triggers warp-speed particle acceleration on HTML5 Canvas and hyperspace audio Doppler effects.
-- **Cinematic Auto-Cruise Mode** (`[C]` key): Hands-free automated camera fly-through from start to finish.
-- **Vertical Chapter Minimap**: Interactive navigation track with progress fill and quick-jump chapter dots (`1`-`5` keybindings).
+## 🚀 Key Features
 
----
-
-### 3. 💳 Parallax Flight Certificate Minting Hub (.PNG Export)
-- Mint a personalized cryptographic Voyager Certificate directly in the browser.
-- Live inputs for Agent Callsign, Sector Division, and Flagship Vessel with instant preview.
-- **Download High-Res PNG**: Utilizes offscreen HTML5 Canvas to rasterize high-resolution certificates with holographic seals, barcodes, and cryptographic signatures.
-
----
-
-### 4. 🎵 Procedural Web Audio Engine (Altitude-Modulated)
-- 100% synthesized sound design built on the browser's native **Web Audio API** (zero external MP3/WAV dependencies).
-- Ambient harmonic sub-bass drone whose frequency and filter cutoff smoothly rise as altitude increases.
-- UI hover beeps, mechanical clicks, warp whooshes, and an animated 4-band audio EQ visualizer.
-
----
-
-### 5. 🎨 4-Matrix Cyber Theme Engine
-- **Neo-Cyan (Default)**: `#00f3ff`
-- **Crimson Berserk**: `#ff0055`
-- **Matrix Emerald**: `#00ff88`
-- **Solar Cyber-Gold**: `#ffbb00`
-- Switches all CSS custom properties, canvas particle hues, and glow filters instantaneously (`[T]` key).
-
----
-
-## 🚀 Quick Start Guide
-
-### Option 1: Run with Python Local Server (Recommended)
-```bash
-cd activity-3
-python server.py
-```
-Open [http://localhost:8083](http://localhost:8083) in your web browser.
-
-### Option 2: Direct Browser Launch
-Double-click `index.html` in the `activity-3` directory in any modern browser (Chrome, Edge, Firefox, Brave, Safari).
+* **5-Chapter Vertical Progression:** Seamlessly scroll or auto-pilot through distinct atmospheric layers, each featuring custom particle density, lighting models, and canvas rendering logic.
+* **Interactive X-Ray Circuit Scanner:** Hover and drag across the Neo-Mumbai skyline to reveal hidden superconducting internal schematics and cryogenic power buses.
+* **Scroll-Driven Pinned Mecha Disassembly:** Scrub through Chapter 3 to dynamically expand and inspect a multi-component cybernetic mecha structure.
+* **Procedural Web Audio Engine:** Zero external asset dependencies. Powered entirely by the native Web Audio API with real-time altitude pitch modulation and an animated 4-band frequency visualizer.
+* **Voyager Certificate Minting Hub:** Generate, customize, and export high-resolution cryptographic flight certificates (.PNG) directly from an offscreen canvas rendering engine.
+* **4-Matrix Dynamic Theme Switcher:** Instantly toggle between **Neo-Cyan** (`#00f3ff`), **Crimson Berserk** (`#ff0055`), **Matrix Emerald** (`#00ff88`), and **Solar Cyber-Gold** (`#ffbb00`).
+* **Telemetry HUD & Auto-Cruise:** Real-time altitude and velocity trackers paired with a hands-free cinematic auto-pilot mode (`[C]` key).
 
 ---
 
 ## ⌨️ Controls & Keybindings
 
-| Key | Action |
-| :--- | :--- |
-| **`1` - `5`** | Instant smooth jump to Chapters 1 through 5 |
+| Key / Action | Function |
+| --- | --- |
+| **`1` - `5**` | Instant smooth jump to Chapters 1 through 5 |
 | **`C`** | Toggle Hands-Free Cinematic Auto-Cruise Mode |
 | **`M`** | Toggle Procedural Web Audio Synthesizer |
-| **`T`** | Cycle Color Theme Matrix (Cyan / Crimson / Matrix / Gold) |
+| **`T`** | Cycle Color Theme Matrix |
 | **Mouse Hover / Drag** | Move X-Ray Circuit Scanner Lens / 3D Tilt Cards |
-| **Scroll Wheel / Touch Swipe** | Scrub through parallax layers & Mecha disassembly |
+| **Scroll / Touch** | Scrub parallax layers and mecha disassembly |
 
 ---
 
-## 🛠️ Tech Stack & Architecture
+## 🛠️ Quick Start Guide
 
-- **Markup**: Semantic HTML5 with accessible landmarks & ARIA labels.
-- **Styling**: Modern CSS3 (CSS Custom Properties, Grid, Flexbox, 3D Perspective Transforms, Backdrop Glassmorphism, `will-change: transform`).
-- **Canvas Rendering**: 60 FPS HTML5 Canvas engine with 3-tier starfield parallax, quantum particle networks, and warp-speed radial line streaks.
-- **Physics Engine**: Lerp-damped multi-axis scroll controller, velocity tracker, and pinned scrubbing observer.
-- **Sound Engine**: Procedural Web Audio API with real-time AnalyserNode FFT visualization.
-- **Portability**: 100% self-contained, zero npm packages, zero external CDNs needed.
+### Option 1: Local Python Server (Recommended)
+
+```bash
+cd activity-3
+python server.py
+
+```
+
+Open [http://localhost:8083](https://www.google.com/search?q=http%3A%2F%2Flocalhost%3A8083) in your web browser.
+
+### Option 2: Direct Browser Execution
+
+Double-click `index.html` within your preferred modern browser (Chrome, Safari, Firefox, Edge). No build tools, package managers, or internet connections required.
 
 ---
 
-## 📝 Submission Checklist for CA Portal ([https://ca.techfest.org/tasks/web-development](https://ca.techfest.org/tasks/web-development))
+## 🧩 Technical Architecture
 
-- [x] **Standalone Interactive Parallax Scrolling Page** (150 Points)
-- [x] **Multi-Layered Depth System**: 5 distinct chapters spanning `-10,000m` to `+384,000km`
-- [x] **Pinned Scrubbing Experience**: Step-by-step exploded Mecha core assembly/disassembly
-- [x] **Interactive X-Ray Circuit Scanner Lens**: Dynamic holographic lens revealing internal schematics
-- [x] **3D Tilt Arena Monoliths**: Perspective cards reacting to mouse angles
-- [x] **Flight Certificate PNG Generator**: Offscreen canvas badge rasterizer and download
-- [x] **Procedural Web Audio Engine**: Zero-dependency synthesizer with altitude pitch modulation
-- [x] **4-Matrix Theme Switcher**: Instant recoloring across CSS, Canvas, and glow filters
-- [x] **Cross-Platform Responsive**: Desktop, tablet, mobile touch swipe & gyroscope parallax support
+* **Core Layout:** Pure semantic HTML5 + CSS3 Custom Properties utilizing 3D perspective transforms, CSS Grid/Flexbox, and hardware-accelerated layers (`will-change: transform`).
+* **Rendering Engine:** 60 FPS HTML5 Canvas pipeline managing 3-tier starfields, quantum particle lattices, and velocity-based warp streaks.
+* **Physics & State Management:** Custom lerp-damped scroll controllers, real-time velocity monitors, and Intersection/Scroll tracking observers.
+* **Portability:** 100% self-contained frontend architecture with zero external npm dependencies or third-party CDN libraries.
+
+---
+
+## 📝 Submission Checklist
+
+* [x] Standalone Interactive Parallax Page (150 Points)
+* [x] 5-Chapter Vertical & Horizontal Stratification
+* [x] Pinned Scrubbing Mecha Assembly
+* [x] X-Ray Holographic Circuit Scanner
+* [x] 3D Tilt Arena Monoliths
+* [x] Offscreen Canvas PNG Certificate Generator
+* [x] Procedural Web Audio API Synthesizer
+* [x] 4-Matrix Dynamic Theme Engine
+* [x] Fully Responsive (Desktop, Tablet, Mobile Touch/Gyroscope)
 
 ---
 
